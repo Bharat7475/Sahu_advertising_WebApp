@@ -1,0 +1,400 @@
+﻿@using Hoarding_management.Data
+@model CampaignPagedViewModel
+
+<body>
+    <div class="container-fluid my-2">
+        <div class="p-2">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-5">
+                    <h3 class="text-primary pt-2 pl-4">Ongoing Campaigns</h3>
+                </div>
+                <div class="col-12 col-md-7">
+                    <div class="d-flex flex-column flex-md-row justify-content-md-end">
+                        <input type="search" id="searchQuery" autocomplete="off" placeholder="Search.." class="ml-4 rounded-pill p-2 ml-2 btn-outline-red" style="border:1px solid" value="@Model.SearchQuery" oninput="searchCustomers()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Focus the search input when the query is not empty -->
+    @if (!string.IsNullOrEmpty(Model.SearchQuery))
+    {
+        <script>
+            $(document).ready(function () {
+                var searchInput = $('#searchQuery');
+                searchInput.focus();
+
+                // Set the cursor at the end of the input field
+                var val = searchInput.val();
+                searchInput.val('').val(val); // Clears and sets the value back to move the cursor to the end
+            });
+        </script>
+    }
+
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="container-fluid p-2">
+                <!-- Search and Row Quantity Section -->
+                <div class="row mb-2">
+                    <div class="col-md-1">
+                        <select id="rowQuantity" class="form-control" onchange="updateRowQuantity()" style="outline: 1px solid #b4b4b4;color: #050000;">
+                            @if (Model.PageSize == 5)
+                            {
+                                <option value="5" selected>5</option>
+                            }
+                            else
+                            {
+                                <option value="5">5</option>
+                            }
+
+                            @if (Model.PageSize == 10)
+                            {
+                                <option value="10" selected>10</option>
+                            }
+                            else
+                            {
+                                <option value="10">10</option>
+                            }
+
+                            @if (Model.PageSize == 20)
+                            {
+                                <option value="20" selected>20</option>
+                            }
+                            else
+                            {
+                                <option value="20">20</option>
+                            }
+
+                            @if (Model.PageSize == 50)
+                            {
+                                <option value="50" selected>50</option>
+                            }
+                            else
+                            {
+                                <option value="50">50</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive mt-4">
+                    <table class="table table-striped text-center" id="campaignsTable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Vendor </th>
+                                <th>Customer </th>
+                                <th>Campain Book Date</th>
+                                <th>Amount</th>
+
+
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                       <tbody>
+                            @foreach (var item in Model.CampaignsViewModel)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="data:image/png;base64,@item.Image" class="img-fluid" alt="Image" width="100%" height="100%" />
+                                    </td>
+                                    @*<td>@item.VendorName @item.Location @item.City</td>*@
+                                    <td class="text-start" style="text-align:left;" >
+                                        <strong>@item.VendorName</strong><br />
+                                        @item.Location<br />
+                                        <strong>@item.City</strong>
+                                    </td>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.FromDate?.ToString("dd-MM-yyyy") TO @item.ToDate?.ToString("dd-MM-yyyy")</td>
+                                    <td>@item.BookingAmt</td>
+
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary p-2"
+                                                onclick="openEditcampModal('@item.Id', '@item.FromDate?.ToString("yyyy-MM-dd")', '@item.ToDate?.ToString("yyyy-MM-dd")', '@item.BookingAmt')">
+                                            <i class="mdi mdi-table-edit"></i>
+                                        </button>
+                                        |
+                                        <button type="button" class="btn btn-danger p-2" data-toggle="modal" data-target="#deleteModal" onclick="deleteModel('@item.Id')">
+                                            <i class="mdi mdi-delete"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    
+                    <!-- Pagination -->
+                  @*  <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end m-2">
+                            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.CurrentPage - 1, pageSize = 7 })" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, pageSize = 7 })">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.CurrentPage + 1, pageSize = 7 })" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>*@
+                    <div class="pagination justify-content-end m-2">
+                        @if (Model.TotalPages > 0)
+                        {
+                            if (Model.CurrentPage > 1)
+                            {
+                                <a href="@Url.Action("Index", new { searchQuery = Model.SearchQuery, pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize })" class="btn btn-primary">Previous</a>
+                            }
+
+                            for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <a href="@Url.Action("Index", new { searchQuery = Model.SearchQuery, pageNumber = i, pageSize = Model.PageSize })" class="btn @(i == Model.CurrentPage ? "btn-secondary" : "btn-light")">@i</a>
+                            }
+
+                            if (Model.CurrentPage < Model.TotalPages)
+                            {
+                                <a href="@Url.Action("Index", new { searchQuery = Model.SearchQuery, pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize })" class="btn btn-primary">Next</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Campaign Modal -->
+    <div class="modal fade" id="editCampaignModal" tabindex="-1" aria-labelledby="editCampaignModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Campaign</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCampaignForm">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="startDate">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control fromdate" id="editfromdate" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="endDate">End Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control  todate" id="edittodate" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
+                                    <label for="budget">Budget <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="budget" placeholder="Budget" required>
+                                </div>
+                                <input type="hidden" id="editId" />
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="editCampaignForm" id="saveEditcampain">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteCampaignModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius:20px;">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary">Delete Campaign</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId" />
+                <p class="text-center">Are you sure you want to delete this campaign?</p>
+            </div>
+                <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="DeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    <script>
+
+        $(document).ready(function () {
+            // Listen for changes on the Start Date and End Date
+
+            var today = new Date().toISOString().split('T')[ 0 ]; // Get today's date in YYYY-MM-DD format
+            $('#editfromdate').attr('min', today); // Set the min attribute to today's date, disabling past dates
+
+            // Initialize variables to store valid start and end dates
+            var previousStartDate = $('#editfromdate').val();
+            var previousEndDate = $('#edittodate').val();
+
+            // Handle start date change
+            $('.fromdate').on('change', function () {
+                var selectedDate = $('#editfromdate').val(); // Get the selected date
+
+                // Check if the selected date is valid (today or later)
+                if (selectedDate >= today) {
+                    toastr.success('Valid date selected.');
+                    previousStartDate = selectedDate; // Update the valid start date
+                } else {
+                    toastr.error('Please select a date that is today or later.');
+                    $('#editfromdate').val(previousStartDate); // Revert to the previous valid start date
+                }
+            });
+
+            // Handle end date change
+            $('.todate').on('change', function () {
+                var startDate = new Date($('#editfromdate').val()); // Get the selected start date
+                var endDate = new Date($('#edittodate').val()); // Get the selected end date
+
+                // Add 1 day to the start date for validation
+                var minEndDate = new Date(startDate);
+                minEndDate.setDate(minEndDate.getDate() + 1); // Set minimum end date to start date + 1 day
+
+                // Check if the selected end date is at least 1 day after the start date
+                if (endDate >= minEndDate) {
+                    toastr.success('Valid end date selected.');
+                    previousEndDate = $('#edittodate').val(); // Update the valid end date
+                } else {
+                    toastr.error('End date must be at least one day after the start date.');
+                    $('#edittodate').val(endDate); // Revert to the previous valid end date
+                }
+            });
+
+
+
+            // $('.fromdate').on('change', function () {
+               
+            //     if (startdate && enddate) {
+            //         $.ajax({
+            //             type: 'POST',
+            //             url: '/Campaign/CheckAvailability', // Change this to your actual controller and action method
+            //             data: {
+            //                 id: campaignId,
+            //                 fromDate: startdate,
+            //                toDate: enddate
+            //             },
+            //             success: function (response) {
+            //                 if (response.isBooked) {
+            //                     toastr.error('Campaign already booked from ' + startdate + ' to ' + enddate);
+            //                 } else {
+            //                     toastr.success('Campaign is available.');
+            //                 }
+            //             },
+            //             error: function (xhr, status, error) {
+            //                 toastr.error('An error occurred while checking availability.');
+            //             }
+            //         });
+            //     } else {
+            //         toastr.warning('Please select both from and to dates.');
+            //     }
+            // });
+
+           
+        });
+
+
+
+
+
+        function searchCustomers() {
+            var searchQuery = document.getElementById('searchQuery').value;
+            var pageSize = document.getElementById('rowQuantity').value;
+            window.location.href = `/OngoingCampain/Index?searchQuery=${searchQuery}&pageNumber=1&pageSize=${pageSize}`;
+        }
+
+        function updateRowQuantity() {
+            var pageSize = document.getElementById('rowQuantity').value;
+            var searchQuery = document.getElementById('searchQuery').value;
+            window.location.href = `/OngoingCampain/Index?searchQuery=${searchQuery}&pageNumber=1&pageSize=${pageSize}`;
+        }
+   
+
+        function openEditcampModal(id, fromDate, toDate, budget) {
+            // Check if valid dates and budget
+            if (fromDate && toDate && budget) {
+                $('#editId').val(id);
+                $('#editfromdate').val(fromDate);
+                $('#edittodate').val(toDate);
+                $('#budget').val(budget);
+                $('#editCampaignModal').modal('show');
+            } else {
+                toastr.error('Invalid data provided for editing.');
+            }
+        }
+
+       
+
+        $('#saveEditcampain').on('click', function(e) {
+            e.preventDefault(); // Prevent form submission
+
+            var id = $('#editId').val();
+            var fromDate = $('#editfromdate').val();
+            var toDate = $('#edittodate').val();
+            var bookingAmt = $('#budget').val();
+
+            $.ajax({
+                url: '/OngoingCampain/UpdateCampaign',
+                type: 'POST',
+                data: { Id: id, FromDate: fromDate, ToDate: toDate, BookingAmt: bookingAmt },
+                success: function (response) {
+
+                    setTimeout(function () {
+                        $('#editCampaignModal').modal('hide');
+                        toastr.success('Campaign updated successfully.');
+                       
+                    }, 1000);
+                    location.reload();
+                   // Reload to update the table
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error updating campaign.');
+                }
+            });
+        });
+
+    function deleteModel(id) {
+           $('#editId').val(id);
+    }
+
+        $('#DeleteBtn').on('click', function () {
+            var id = $('#editId').val();
+            $.ajax({
+                url: '/OngoingCampain/DeleteCampaign',
+                type: 'DELETE',
+                data: { id: id },
+                success: function (response) {
+                    toastr.success('Campaign deleted successfully.');
+                    $('#deleteModal').modal('hide');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error deleting campaign.');
+                }
+            });
+        });
+
+</script>
+</body>

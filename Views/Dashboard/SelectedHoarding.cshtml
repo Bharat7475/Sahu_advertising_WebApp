@@ -1,0 +1,1215 @@
+﻿<!-- CSS for Autocomplete Suggestions -->
+<style>
+    .autocomplete-suggestions {
+        border: 1px solid #ddd;
+        background-color: white;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        z-index: 1000;
+    }
+
+    .autocomplete-suggestion {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .autocomplete-suggestion.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .rateInput_rate {
+        color: black;
+        font-size: 18px;
+        font-weight: bold; /* Makes the text bold */
+        border: 1px solid #000;
+        color: black;
+        border-radius: 15px;
+        padding: 5px;
+        justify-content: end;
+        width: 40%;
+        text-align: center;
+        margin-left: 60%;
+    }
+
+    .StartDate, .EndDate{
+        border: 0.2px solid #000;
+        color: black;
+        border-radius: 15px;
+     
+    }
+
+    .StartDate{
+        margin-right:10px;
+    }
+</style>
+
+﻿<section>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <h3 class="mb-4">Selected Hoarding</h3>
+
+                <div class=" mb-2" id="selectedCard">
+                </div>
+            </div>
+
+            <div class="col-md-4 mt-5">
+                <div class="customer-details">
+                    <div class="row mb-3">
+                        <div class="col-6 " id="labelqute">
+                            <input type="radio" id="create-quotation" name="quotation" value="quotation">
+                            <label    for="create-quotation">Create Quotation</label>
+                        </div>
+                        <input type="text" id="idforalldatechange" name="idforalldatechange" style="display:none">
+                        <input type="text" id="idforalldatechangestring" name="idforalldatechangestring" style="display:none">
+                        <div class="col-6">
+                            <input type="radio" id="add-campaign" name="quotation" value="campaign">
+                            <label for="add-campaign">Add to Campaign</label>
+                        </div>
+                    </div>
+                    <form>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-9">
+                                    <label for="customer">Customer Details</label>
+                                    @*  <select class="form-control custom-border" id="businessName" name="businessName" style="border:1px solid black;" required>
+                                    <option value="">Select Customer</option>
+                                    </select> *@
+                                    <!-- Autocomplete Input Element -->
+                                    <input type="text" class="autocomplete form-control custom-border" id="businessName" name="businessName" placeholder="Enter Business Name" data-id="businessName" data-width="nowidth" autocomplete="off" required>
+                                    <input type="text" id="businessNameid" name="businessNameid" style="display:none">
+
+                                </div>
+                                <div class="col-3 d-flex justify-content-center align-items-center mt-3">
+                                    <button type="button" class="btn btn-primary my-3" data-toggle="modal" data-target="#addCustomerModal">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="show-lg">
+
+                            @* <p><span class="label">Business Name</span>: <span id="businessName"></span></p> *@
+                            <p><span class="label"> contact person name </span>: <span id="customerName"></span></p>
+                            <p><span class="label">City</span>: <span id="city"></span></p>
+                            <p><span class="label">Address</span>: <span id="address"></span></p>
+                            <p><span class="label">GST Number</span>: <span id="gstNo"></span></p>
+                            <p><span class="label">Contact Number</span>: <span id="contactNo"></span></p>
+                            <p><span class="label">Alternate Number</span>: <span id="alternateNumber"></span></p>
+                            <p><span class="label">State</span>: <span id="state"></span></p>
+                        </div>
+                        <ul id="resultsContainer"></ul>
+
+                        <div class="action-buttons m-4">
+                            <button type="button" class="btn btn-primary" id="saveQuotation">Save Quotation</button>
+                            <!---->
+                            <button type="button" class="btn btn-primary" id="saveCampaign">Save Campaign</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius:20px;">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary" id="deleteModalLabel">Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted-foreground text-center mt-2">Are you sure you want to Delete this Hoarding?</p>
+                <input type="hidden" id="selectedId" />
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" id="deleteHoarding">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- add model -->
+    <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCustomerModalLabel">Add Customer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCustomerForm">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="businessName">Business Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control custom-border" id="businessName" name="businessName" placeholder="Business Name" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="customerName">Contact Person Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control custom-border" id="customerName" name="customerName" placeholder="Contact Person Name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="email">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control custom-border" id="email" name="email" placeholder="Email" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="gstn">GST Number</label>
+                                <input type="text" class="form-control custom-border" id="gstn" name="gstn" placeholder="GST Number" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="contactNumber">Contact Number <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control custom-border" id="contactNumber" name="contactNumber" placeholder="Contact Number" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="alternateNumber">Alternate Number</label>
+                                <input type="text" class="form-control custom-border" id="alternateNumber" name="alternateNumber" placeholder="Alternate Number">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control custom-border" id="address" name="address" placeholder="Address">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="state">State</label>
+                                <select class="form-control border-black" id="state" name="state" style="border: 1px solid black; border-radius:10px">
+                                    <option value="">Select state</option>
+                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chandigarh">Chandigarh</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                    <option value="Daman and Diu">Daman and Diu</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Ladakh">Ladakh</option>
+                                    <option value="Lakshadweep">Lakshadweep</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Puducherry">Puducherry</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary"  id="savecustomer" >Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+      <a id="hiddenRedirectLink" href="/SelectedHoarding" style="display:none;"></a>
+      <input type="text" id="selecteId"  style="display:none;" />
+
+
+
+
+
+      <script>
+          
+          $('#savecustomer').on('click',function (e) {
+         e.preventDefault(); // Prevent the default form submission
+
+        // Clear previous error messages
+        $('.error-message').remove();
+
+        // Validate required fields
+        var isValid = true;
+
+        // Check Business Name
+        // if ($('#businessName').val().trim() === '') {
+        //     $('#businessName').after('<span class="error-message text-danger">This field is required.</span>');
+        //     isValid = false;
+        // }
+
+        // // Check Contact Person Name
+        // if ($('#customerName').val().trim() === '') {
+        //     $('#customerName').after('<span class="error-message text-danger">This field is required.</span>');
+        //     isValid = false;
+        // }
+
+        // Check Email
+        if ($('#email').val().trim() === '') {
+            $('#email').after('<span class="error-message text-danger">This field is required.</span>');
+            isValid = false;
+        }
+
+        // Check Contact Number
+        if ($('#contactNumber').val().trim() === '') {
+            $('#contactNumber').after('<span class="error-message text-danger">This field is required.</span>');
+            isValid = false;
+        }
+
+        // Check if GST Number (if filled) is exactly 15 characters long
+        var gstNumber = $('#gstn').val().trim();
+        if (gstNumber !== '' && gstNumber.length !== 15) {
+            $('#gstn').after('<span class="error-message text-danger">GST Number must be exactly 15 characters.</span>');
+            isValid = false;
+        }
+
+        // If the form is valid, proceed with the AJAX submission
+        if (isValid) {
+            var formData = $('#addCustomerForm').serialize();
+            console.log("Serialized Form Data: ", formData); // For debugging
+
+            $.ajax({
+                type: "POST",
+                url: '/Customer/AddNewCustomer', // Update the URL to match your controller action
+                data: formData,
+                success: function (response) {
+                    console.log("Response: " + response);
+                    if (response.message == "Customer Add Successfully. ") {
+                        toastr.success('Customer added successfully.');
+                        $('#addCustomerModal').modal('hide'); // Hide the modal
+                        location.reload(); // Optionally reload the page
+                    }
+                    else {
+                        toastr.error('An error occurred while adding the customer.');
+                    }
+                   
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('An error occurred while adding the customer.');
+                }
+            });
+        } else {
+            toastr.error('Please fill all the required fields.');
+        }
+    });
+
+
+
+      </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+        $(document).ready(function () {
+            var updatedRates = [];
+            var addCamign = [];
+            var changedateids = [];
+            var newRate;
+            var originalRates = {};
+            var id = sessionStorage.getItem('selectedHoardingId');
+            let idString = "";  // Step 1: Initialize an empty string
+           
+
+            function fetchData() {
+                //  updatedRates = [];
+                //  addCamign = [];
+                //  changedateids = [];
+                //  newRate;
+                //  originalRates = {};
+                
+                //  idString = "";
+                // var id = sessionStorage.getItem('selectedHoardingId');
+
+                // Define ajaxOptions based on default GET request
+                var ajaxOptions = {
+                    url: '/Dashboard/SelectedHoardingJ', // Default URL
+                    type: 'GET', // Default method
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+
+                            // document.getElementById('create-quotation').checked = true;
+                            if (id !== null) {
+                                // Set the checkbox to checked
+                                document.getElementById('add-campaign').checked = true;
+                               // $('#create-quotation').closest('.col-6').find('input').prop('disabled', true);
+                                $('#labelqute').css('display', 'none');
+
+                                
+                            }
+
+
+                            $('#selectedCard').empty();
+
+                            var custidnew = 0;
+
+
+                            // Loop through the data and create HTML for each item
+                            $.each(data.model, function (index, item) {
+                                // Save the original rates to detect changes
+                                originalRates[ item.id ] = { rate: item.rate, FkInventoryId: item.fkInventoryId };
+
+                                updatedRates.push({ id: item.id, rate: item.rate, FkInventoryId: item.fkInventoryId });
+                                addCamign.push({ id: item.id, rate: item.rate, FkInventoryId: item.fkInventoryId });
+
+
+
+                                if (index === 0) {
+                                    $("#idforalldatechange").val("" + item.id + "");
+                                }
+                                else {
+                                    changedateids.push({ id: item.id });
+                                    // Step 2: Append item.id to the idString, separating with a comma
+                                    idString += item.id + ",";
+                                }
+
+                                var isLight = item.isLight == 1 ? "Yes" : "No";
+                                var cardHtml = `
+                                                <div class="hoarding-item my-2">
+                                                    <img src="data:image/png;base64,${item.image}" alt="Image" class="rounded">
+                                                    <div class="hoarding-info">
+                                                        <p class="font-size-4"><b>Vendor Name: ${item.vendorName}</b></p>
+                                                        <p>
+                                                            <span style="display:none;" > ${item.fkInventoryId}</span>
+                                                            Area : ${item.area}<br>
+                                                            Size: ${item.width}FT x ${item.height}FT <br>
+                                                            LED  : ${isLight}<br>
+                                                            City : ${item.city}
+                                                        </p>
+                                                    </div>
+                                                    <div class="hoarding-actions" style="margin-right: 15px;">
+                                                        <button type="button" class="btn btn-danger rounded-circle p-2" data-toggle="modal" data-target="#deleteModal" onclick="cnfDeleteselecedInvetry(${item.id})">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </button>
+
+                                                                <button type="button" style="display: none;" id="deleteQuteHoarding" class="btn btn-danger rounded-circle p-2" data-toggle="modal" data-target="#deleteModalquate" onclick="cnfDeleteselecedInvetry(${item.id})">
+                                                                    <i class="mdi mdi-delete"></i>
+                                                         </button>
+                                                                 
+                                                        <div id="rate-section" class="rate-section my-2">
+                                                            <h4 class="my-2" id='id_h4' >
+                                                                <span style='font-size:20px;'>&#8377; </span>
+                                                                <span id="rateDisplay_${item.id}">${item.rate}</span>
+                                                                <button type="button" class="btn btn-primary btn-sm ml-2" id="btn-pencil" onclick="editRate(${item.id}, ${item.rate})">
+                                                                    <i class="mdi mdi-pencil"></i>
+                                                                </button>
+                                                            </h4>
+                                                            <div class="rate-edit" id="rateEdit_${item.id}" style="display: none;">
+                                                                <input type="number" class="form-control mb-2 rateInput_rate" id="rateInput_${item.id}" value="${item.rate}">
+                                                                <button type="button" class="btn btn-success btn-sm" onclick="saveRate(${item.id})">Save</button>
+                                                                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelEdit(${item.id})">Cancel</button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="camp-date" style="display:none;">
+                                                                <input type="date" class="form-control" id="StartDate_${item.id}" name="StartDate"
+                                                                       min="${new Date().toISOString().split('T')[0]}"
+                                                                       onchange="updateEndDateMin(${item.id}); validateDates(${item.id});"
+                                                                       value="${new Date().toISOString().split('T')[0]}">
+                                                                <div id="error-message-${item.id}" style="color: red; display: none;"></div>
+
+                                                                <input type="date" class="form-control" id="EndDate_${item.id}" name="EndDate"
+                                                                       onchange="validateDates(${item.id})">
+                                                                <div id="error-message-end-${item.id}" style="color: red; display: none;"></div>
+
+                                                      </div>
+
+                                                    </div>
+                                                </div>
+                                            `;
+                                $('#selectedCard').append(cardHtml);
+
+                                if (custidnew == 0 && id !== null) {
+                                    $("#businessName").val("" + item.businessName + "");
+                                    custidnew = item.fkcustomer;
+                                    $("#businessNameid").val(item.fkcustomer);
+                                }
+                            });
+
+
+
+                            if (idString.length > 0) {
+                                idString = idString.slice(0, -1); 
+                            }
+
+
+                            $("#idforalldatechange").val("");
+                            $("#idforalldatechange").val("" + idString + "");
+                            if (id !== null) {
+                                $.ajax({
+                                    url: '/Customer/GetCustomerinfoById',
+                                    type: 'GET',
+                                    data: { id: custidnew },
+                                    success: function (response) {
+                                        if (response.success) {
+                                            const customer = response.model.result;
+                                            $('#customerName').text(customer.customerName);
+                                            $('#address').text(customer.address);
+                                            $('#city').text(customer.city);
+                                            $('#gstNo').text(customer.gstNo);
+                                            $('#contactNo').text(customer.contactNo);
+                                            $('#alternateNumber').text(customer.alternateNumber);
+                                            $('#state').text(customer.state);
+
+                                            toastr.success('Customer loaded successfully.');
+                                        } else {
+                                            console.error('Failed to load customer info:', response.message);
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Error fetching customer info:', error);
+                                    }
+                                });
+                            }
+
+
+
+                            window.editRate = function (id, currentRate) {
+                                $('#rateDisplay_' + id).hide();
+
+                                $('#rateEdit_' + id).show();
+                            };
+
+                            // Function to save the updated rate
+                            window.saveRate = function (id) {
+                                newRate = $('#rateInput_' + id).val();
+                                $('#rateDisplay_' + id).text(newRate);
+                                $('#rateEdit_' + id).hide();
+                                $('#rateDisplay_' + id).show();
+
+                                // Check if the rate was actually changed
+                                let isRateChanged = newRate != originalRates[ id ].rate;
+
+                                // Remove the existing entry, if any, to avoid duplicates
+                                updatedRates = updatedRates.filter(item => item.id !== id);
+                                addCamign = addCamign.filter(item => item.id !== id);
+
+                                // Add the rate regardless of whether it has changed
+                                updatedRates.push({ id: id, rate: newRate, FkInventoryId: originalRates[ id ].FkInventoryId });
+                                addCamign.push({ id: id, rate: newRate, FkInventoryId: originalRates[ id ].FkInventoryId });
+
+                                // Log changes for debugging
+                                console.log("Updated rates: ", updatedRates);
+                                console.log("Campaign rates: ", addCamign);
+
+                                // Optionally, show a message if a change was detected
+                                if (isRateChanged) {
+                                    console.log(`Rate for item ${id} was changed.`);
+                                }
+                            };
+
+                            
+                            window.cancelEdit = function (id) {
+                                $('#rateEdit_' + id).hide();
+                                $('#rateDisplay_' + id).show();
+                            };
+
+                            if (id !== null) {
+                                // Set the checkbox to checked
+                                if (document.getElementById('add-campaign').checked) {
+                                    $('.camp-date').show();
+                                    $('.camp-date').css('display', 'flex');
+                                    $('#saveCampaign').show();
+                                    $('#saveQuotation').hide();
+                                    $('#deleteQuteHoarding').hide();
+                                } else {
+                                    $('.camp-date').hide();
+                                }
+                            }
+                        } else {
+                            console.error('Error: ' + data.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error: ' + status + error);
+                    }
+                };
+
+                // Check if id exists and modify ajaxOptions accordingly
+                if (id) {
+                    ajaxOptions.url = '/Dashboard/GetHordingdata'; // Change URL
+                    ajaxOptions.type = 'POST'; // Change request type
+                    ajaxOptions.data = { id: id }; // Pass id as data
+                 
+                      document.getElementById('selecteId').value=id;
+
+                    console.log("id :",selecteId);
+                    sessionStorage.removeItem('selectedHoardingId');
+                }
+
+                // Make the AJAX request
+                $.ajax(ajaxOptions);
+            }
+
+            fetchData();
+
+            function updateradio() {
+                $('input[name="quotation"]').change(function () {
+                    if ($(this).val() === 'campaign') {
+                        $('.camp-date').show();
+                        $('.camp-date').css('display', 'flex');
+
+                    } else {
+                        $('.camp-date').hide();
+                    }
+                });
+            }
+            updateradio();
+
+
+            $('#saveQuotation').on('click', function () {
+
+                var customerId = document.getElementById('businessNameid').value;
+
+                if (updatedRates.length === 0) {  // Check if updatedRates is empty or undefined
+                    toastr.error('Please select first Hoarding.');
+                    return;
+                }
+
+                //  alert(customerId)
+                if (!customerId) {
+                    toastr.error('Please select Bussness Name.');
+                    return;
+                }
+
+
+                $.ajax({
+                    url: '/Quatation/SaveQuatation',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ selectedItems: updatedRates, customerId: customerId }),
+                    success: function (response) {
+
+                       
+                        if (response.success) {
+                            window.location.href = '/Quatation/ViewQuotation?id=' + response.id; // Corrected line
+                        } else {
+                            toastr.error(response.message);
+                        }
+
+                      
+
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error('Error saving the quotation.');
+                        console.error('Error saving selected hoardings:', status, error);
+                    }
+                });
+            });
+
+        
+              
+
+         
+
+            $('#saveCampaign').on('click', function () {
+                var customerId = document.getElementById('businessNameid').value;
+
+                // Check if customerId is valid (not null or zero)
+                if (!customerId || customerId === '0') {
+                    toastr.error('Please select a valid Business Name.');
+                    return;
+                }
+
+                let updatedArray1 = [];
+                let isDataValid = true;
+
+                // Check if there are items to save and validate their dates
+                if (!addCamign || addCamign.length === 0) {
+                    toastr.error('No campaigns to save. Please add items.');
+                    return;
+                }
+
+                addCamign.forEach(item => {
+                    let startDate = document.getElementById(`StartDate_${item.id}`).value;
+                    let endDate = document.getElementById(`EndDate_${item.id}`).value;
+
+                    // Validate startDate and endDate
+                    if (!startDate || !endDate) {
+                        toastr.error('Please provide valid start and end dates for all items.');
+                        isDataValid = false; // Set flag to false if any date is missing
+                        return; // Stop processing further for this item
+                    }
+
+                    let newItem = {
+                        id: item.id,
+                        rate: item.rate,
+                        FkInventoryId: item.FkInventoryId,
+                        FromDate: startDate,
+                        ToDate: endDate
+                    };
+                    updatedArray1.push(newItem);
+                });
+
+                // If validation failed, stop further execution
+                if (!isDataValid) {
+                    return;
+                }
+
+                // AJAX call to save campaign data
+                $.ajax({
+                    url: '/OngoingCampain/Addcampaingn',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ selectedItems: updatedArray1, customerId: customerId }),
+                    success: function (response) {
+                        toastr.success('Campaign saved successfully!');
+                        setTimeout(function () {
+                            window.location.href = '/OngoingCampain/Index';
+                        }, 2000); // 2000 milliseconds = 2 seconds
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error('Error saving the campaign.');
+                        console.error('Error saving campaign:', status, error);
+                    }
+                });
+            });
+
+
+        });
+
+
+
+
+  
+        // Set today's date as default for start date
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = [ ...document.querySelectorAll('.StartDate') ]; // Assuming you have multiple items
+
+            items.forEach(function (inputElement) {
+                const id = inputElement.getAttribute('id').split('_')[ 1 ]; // Extract item ID from the input element's ID
+                const today = new Date().toISOString().split('T')[ 0 ]; // Get today's date in yyyy-mm-dd format
+                document.getElementById(`StartDate_${id}`).value = today;
+            });
+        });
+
+
+        //Use Date Validation for not select the preview data for "End date"
+        function updateEndDateMin(itemId) {
+
+            const startDate = document.getElementById(`StartDate_${itemId}`).value;
+            document.getElementById(`EndDate_${itemId}`).setAttribute('min', startDate);
+
+
+
+
+
+        }
+
+        function validateDates(id) {
+            const startDateInput = document.getElementById(`StartDate_${id}`);
+            const endDateInput = document.getElementById(`EndDate_${id}`);
+
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const today = new Date();
+
+            var newid = $("#idforalldatechange").val();
+
+            var newidsaary = [];
+            var idString = $("#idforalldatechange").val();
+
+            newidsaary = idString.split(',');
+
+            if (newid == id) {
+                $.each(newidsaary, function (index, item) {
+                    // console.log("ID at index " + index + ": " + item.id);
+                    // Perform any other actions with item.id
+                    document.getElementById(`StartDate_${item}`).value = startDateInput.value;
+                    document.getElementById(`EndDate_${item}`).value = endDateInput.value;
+                });
+
+            }
+
+            // Check if start date is before today
+            if (startDate < today.setHours(0, 0, 0, 0)) {  // Compare with today's date at 00:00
+                alert("Start date cannot be in the past.");
+                startDateInput.value = today.toISOString().split('T')[ 0 ]; // Reset to today's date
+            }
+
+            // Check if end date is less than start date
+            if (endDate < startDate) {
+                alert("End date cannot be less than the start date.");
+                endDateInput.value = startDateInput.value; // Reset to start date
+            }
+
+             // $.ajax({
+             //        url: '/OngoingCampain/ValidateDatesCampaign',
+             //        type: 'POST',
+             //        data: { Id: id, FromDate: startDateInput.value }, // Send input value
+             //        success: function (response) {
+             //            setTimeout(function () {
+             //                toastr.success(' successfully.');
+             //            }, 1000);
+                       
+             //        },
+             //        error: function (xhr, status, error) {
+             //            toastr.error('Error updating campaign.');
+             //        }
+             //    });
+
+
+         }
+
+
+
+
+
+
+
+
+
+
+
+
+          function cnfDeleteselecedInvetry(id) {
+
+            $('#selectedId').val(id);
+
+        }
+       
+
+      
+             $('#deleteHoarding').off('click').on('click', function () {
+                var selectedCustomerId = $('#selectedId').val();
+                var selectedAction = $('input[name="quotation"]:checked').val(); // Get the selected radio button value
+
+                console.log("id: " + selectedCustomerId);
+                console.log("Selected Action: " + selectedAction);
+
+                // If "Create Quotation" is selected, call DeletedSelectInventoryHoarding
+                if (selectedAction === 'quotation') {
+                    $.ajax({
+                        url: '/Dashboard/DeletedSelectInventoryHoarding',
+                        type: 'POST',
+                        data: { id: selectedCustomerId },
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success(response.message);
+                                location.reload();
+
+                            } else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting inventory hoarding:', error);
+                        }
+                    });
+                }
+                // If "Add to Campaign" is selected and .camp-date is visible, call DeletedHoardingQuation
+                else if (selectedAction === 'campaign' && $('.camp-date').is(':visible')) {
+                    $.ajax({
+                        url: '/Quatation/DeleteQuatationitem',
+                        type: 'POST',
+                        data: { id: selectedCustomerId },
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success(response.message);
+                                // Close the modal properly using Bootstrap's hide method
+                                $('#deleteModal').modal('hide');
+                                fetchData3();
+                            } else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting hoarding quotation:', error);
+                        }
+                    });
+                }
+
+            });
+
+        
+
+
+          
+         function fetchData3() 
+          {
+              let selecteId =$('#selecteId').val();
+
+               console.log(selecteId);
+
+            // Store the ID in sessionStorage
+            sessionStorage.setItem('selectedHoardingId', selecteId);
+
+            // Verify that the ID is set correctly
+            console.log("ID set in sessionStorage: " + sessionStorage.getItem('selectedHoardingId'));
+
+            // Trigger a click event on the hidden link to redirect
+            document.getElementById('hiddenRedirectLink').click();
+        }
+
+     
+
+
+    </script>
+
+
+
+
+    <script>
+        document.querySelectorAll('.autocomplete').forEach(function (input) {
+            let suggestionsContainer;
+            let activeSuggestionIndex = -1;
+            let debounceTimeout;
+            let selectedCustomerId = null;  // Store the selected customer ID
+
+            // Debounce function
+            function debounce(func, delay) {
+                return function () {
+                    clearTimeout(debounceTimeout);
+                    debounceTimeout = setTimeout(func, delay);
+                };
+            }
+
+            // Input event with debounce
+            input.addEventListener('input', debounce(function () {
+                const query = input.value;
+                const id = input.getAttribute('data-id');
+                let urls = "";
+
+                if (id === "businessName") {
+                    urls = `/Dashboard/GetBusinessName?query=${query}`;
+                }
+
+                if (query.length < 1) {
+                    if (suggestionsContainer) {
+                        suggestionsContainer.innerHTML = '';
+                        suggestionsContainer.style.display = 'none';
+                    }
+                    return;
+                }
+
+                // Fetch suggestions from the server
+                fetch(urls)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!suggestionsContainer) {
+                            suggestionsContainer = document.createElement('div');
+                            suggestionsContainer.className = 'autocomplete-suggestions';
+                            input.parentNode.appendChild(suggestionsContainer);
+                        }
+
+                        suggestionsContainer.innerHTML = '';
+                        suggestionsContainer.style.display = 'block';
+                        activeSuggestionIndex = -1;
+
+                        if (data.length === 0) {
+                            // If no matches are found, show a message
+                            suggestionsContainer.innerHTML = `<div class="no-results">No matches found</div>`;
+                            return;
+                        }
+
+                        // Populate suggestions
+                        data.forEach((item) => {
+                            const suggestionItem = document.createElement('div');
+                            suggestionItem.className = 'autocomplete-suggestion';
+                            suggestionItem.textContent = item.name;
+                            suggestionItem.dataset.key = item.id;
+                            suggestionItem.dataset.value = item.name;
+
+                            // Handle suggestion click
+                            suggestionItem.addEventListener('click', function () {
+                                selectSuggestion(item, input, suggestionsContainer);
+                            });
+                            suggestionsContainer.appendChild(suggestionItem);
+                        });
+                    });
+            }, 300)); // Debounce delay
+
+            // Handle keyboard navigation
+            input.addEventListener('keydown', function (e) {
+                const suggestions = suggestionsContainer?.querySelectorAll('.autocomplete-suggestion');
+                if (!suggestions) return;
+
+                if (e.key === 'ArrowDown') {
+                    activeSuggestionIndex = (activeSuggestionIndex + 1) % suggestions.length;
+                    updateActiveSuggestion(suggestions);
+                } else if (e.key === 'ArrowUp') {
+                    activeSuggestionIndex = (activeSuggestionIndex - 1 + suggestions.length) % suggestions.length;
+                    updateActiveSuggestion(suggestions);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (activeSuggestionIndex > -1) {
+                        const activeSuggestion = suggestions[ activeSuggestionIndex ];
+                        const item = {
+                            id: activeSuggestion.dataset.key,
+                            name: activeSuggestion.dataset.value
+                        };
+                        selectSuggestion(item, input, suggestionsContainer);
+                    }
+                }
+            });
+
+            // Function to select a suggestion
+            function selectSuggestion(item, input, suggestionsContainer) {
+                input.value = item.name;
+                selectedCustomerId = item.id;
+                suggestionsContainer.style.display = 'none';
+                $("#businessNameid").val(item.id);  // Set the hidden field for ID
+
+                // Fetch customer info after selection
+                fetchCustomerInfo(item.id);
+            }
+
+            // Fetch customer info
+            function fetchCustomerInfo(id) {
+                $.ajax({
+                    url: '/Customer/GetCustomerinfoById',
+                    type: 'GET',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            const customer = response.model.result;
+                            if (customer) {
+                                $('#customerName').text(customer.customerName);
+                                $('#address').text(customer.address);
+                                $('#city').text(customer.city);
+                                $('#gstNo').text(customer.gstNo);
+                                $('#contactNo').text(customer.contactNo);
+                                $('#alternateNumber').text(customer.alternateNumber);
+                                $('#state').text(customer.state);
+                            } else {
+                                clearCustomerInfo();
+                                toastr.error('No customer data found.');
+                            }
+                        } else {
+                            clearCustomerInfo();
+                            toastr.error('Failed to load customer info.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        clearCustomerInfo();
+                        toastr.error('Error fetching customer info.');
+                    }
+                });
+            }
+
+            // Handle form submission to ensure valid customer is selected
+            document.querySelector('#saveQuotation').addEventListener('click', function (e) {
+                if (!selectedCustomerId) {
+                    e.preventDefault();
+                }
+            });
+
+            // Clear customer info on invalid selection
+            input.addEventListener('blur', function () {
+                const query = input.value.trim();
+
+                // Check if the current input value matches any suggestion
+                fetch(`/Dashboard/GetBusinessName?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const match = data.find(item => item.name.toLowerCase() === query.toLowerCase());
+                        if (!match) {
+                            clearCustomerInfo();
+                            selectedCustomerId = null;
+                            $("#businessNameid").val('');  // Clear hidden field for ID
+                            // setTimeout(function () {
+                            //     toastr.error('Please select a valid business name.');
+
+                            // }, 1000); // Adjust the timeout duration (3000 milliseconds = 3 seconds)
+                            toastr.clear(); // This will clear all toastr notifications
+
+                        }
+                    });
+            });
+
+            // Clear customer info function
+            function clearCustomerInfo() {
+                $('#customerName').text('');
+                $('#address').text('');
+                $('#city').text('');
+                $('#gstNo').text('');
+                $('#contactNo').text('');
+                $('#alternateNumber').text('');
+                $('#state').text('');
+            }
+        });
+
+
+   
+
+        function updateDisplay() {
+            const actionButtons = document.querySelector('.action-buttons');
+            const campaignFields = document.getElementById('campaign-fields');
+            const saveQuotationButton = document.getElementById('saveQuotation');
+            const saveCampaignButton = document.getElementById('saveCampaign');
+            const openCustomerModalButton = document.getElementById('openCustomerModal');
+
+
+            if (document.getElementById('create-quotation').checked) {
+                actionButtons.style.display = 'block';
+                saveQuotationButton.style.display = 'inline-block';
+                saveCampaignButton.style.display = 'none';
+                // openCustomerModalButton.style.display = 'inline-block';
+
+            }
+            else if (document.getElementById('add-campaign').checked) {
+                actionButtons.style.display = 'block';
+                $('#campDate').show();
+                saveQuotationButton.style.display = 'none';
+                saveCampaignButton.style.display = 'inline-block';
+                // openCustomerModalButton.style.display = 'block';
+            }
+            else {
+                actionButtons.style.display = 'none';
+            }
+        }
+
+        document.querySelectorAll('input[name="quotation"]').forEach((radio) => {
+            radio.addEventListener('change', updateDisplay);
+        });
+
+        // Set default selection and update display accordingly
+        document.getElementById('create-quotation').checked = true;
+        updateDisplay();
+
+        $(document).ready(function () {
+            // Initially hide the date fields
+            $('#campDate').hide();
+
+            // Event listener for the radio buttons
+            $('input[name="quotation"]').change(function () {
+                if ($(this).val() === 'campaign') {
+                    $('#campDate').show();
+                } else {
+                    $('#campDate').hide();
+                }
+            });
+
+
+        });
+
+        $(document).ready(function () {
+
+            $.ajax({
+                url: '/Customer/GetCustomerinfo', // Corrected endpoint for getting all customer info
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        var customerDropdown = $('#businessName');
+                        customerDropdown.empty(); // Clear existing options
+                        customerDropdown.append('<option value="">Select Customer</option>'); // Default option
+
+                        $.each(response.model, function (index, data) {
+                            customerDropdown.append('<option value="' + data.id + '">' + data.businessName + '</option>');
+                        });
+
+                        // Open the Add Quotation modal after loading customer details
+                        $('#addQuotationModal').modal('show');
+
+                    } else {
+                        console.error('Failed to load customer details:', response.Message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching customer details:', error);
+                }
+            });
+
+            // Fetch and display customer details when a customer is selected
+            $('#businessName').change(function () {
+
+                var selectedCustomerId = document.getElementById('businessNameid').value;
+
+
+                if (selectedCustomerId) {
+                    $.ajax({
+                        url: '/Customer/GetCustomerinfoById', // Correct endpoint for getting customer by ID
+                        type: 'GET',
+                        data: { id: selectedCustomerId },
+                        success: function (response) {
+                            console.log("Selected Customer :", response.model.result.id);
+                            if (response.success) {
+                                // Accessing properties from response.model.result
+                                //  $('#businessName').text(response.model.result.businessName);
+                                $('#customerName').text(response.model.result.customerName);
+                                $('#address').text(response.model.result.address);
+                                $('#city').text(response.model.result.city);
+                                $('#gstNo').text(response.model.result.gstNo);
+                                $('#contactNo').text(response.model.result.contactNo);
+                                $('#alternateNumber').text(response.model.result.alternateNumber);
+                                $('#state').text(response.model.result.state);
+
+                                // setTimeout(function () {
+                                //     toastr.success('Customer loaded successfully.');
+                                // },);
+
+                            } else {
+                                console.error('Failed to load customer info:', response.message);
+                            }
+
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching customer info:', error);
+                        }
+                    });
+                }
+                else {
+                    // Clear customer info if no customer is selected
+                    // $('#businessName').text('');
+                    $('#customerName').text('');
+                    $('#city').text('');
+                    $('#area').text('');
+                    $('#gstNo').text('');
+                    $('#contactNo').text('');
+                    $('#alternateNumber').text('');
+                    $('#address').text('');
+                    $('#state').text('');
+                }
+            });
+
+        });
+
+      
+
+
+
+    </script>
+
+
+
+
+
+</section>

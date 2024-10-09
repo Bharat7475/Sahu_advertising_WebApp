@@ -1,0 +1,89 @@
+﻿.custom-border {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+    .custom-border:focus {
+        border-color: black;
+        box-shadow: none;
+    }
+
+.text-danger {
+    color: red;
+}
+
+.form-group.required .form-control {
+    border: 1px solid #dc3545;
+}
+
+input {
+    border-radius: 10px;
+}
+
+.img-container {
+    display: flex;
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    height: 150px; /* Adjust height as needed */
+    overflow: hidden; /* Ensure image doesn’t overflow container */
+}
+
+.img-fluid {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+}
+
+.action-icons {
+    display: flex;
+    gap: 8px;
+}
+
+    .action-icons i {
+        cursor: pointer;
+    }
+
+p {
+    margin-bottom: 2px;
+}
+
+.ribbon-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.ribbon {
+    position: relative;
+    background: red;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 12px;
+    transform: rotate(-45deg);
+    width: 150px;
+    margin: 10px;
+    top: 10px;
+    left: -50px;
+}
+
+.card-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.card {
+    border-radius: 20px;
+}
+
+    .card img {
+        padding: 5px;
+        border-radius: 20px;
+    }
+
+
+/*hoarding css*/
+
+
+

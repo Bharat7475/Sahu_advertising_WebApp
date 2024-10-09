@@ -1,0 +1,212 @@
+﻿.img-container {
+    display: flex;
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    height: 160px; /* Adjust height as needed */
+    overflow: hidden; /* Ensure image doesn’t overflow container */
+}
+.icon {
+    width: 16px; /* Adjust the size to your preference */
+    height: 16px;
+    margin-right: 8px; /* Adds some spacing between the icon and the text */
+    vertical-align: middle; /* Aligns the icon with the text */
+}
+
+#pointer:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.img-fluid {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+}
+
+.action-icons {
+    display: flex;
+    gap: 8px;
+}
+
+    .action-icons i {
+        cursor: pointer;
+    }
+
+p {
+    margin-bottom: 2px;
+}
+
+.ribbon-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.ribbon {
+    position: relative;
+    background: red;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 12px;
+    transform: rotate(-45deg);
+    width: 150px;
+    margin: 10px;
+    top: 10px;
+    left: -50px;
+}
+
+.card-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.card {
+    border-radius: 20px;
+}
+
+    .card img {
+        padding: 3px;
+        border-radius: 20px;
+    }
+
+
+$shopping-cart-red: #df0000;
+
+.fa-stack1[data-count]:after {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    content: attr(data-count);
+    font-size: px;
+    padding: 0.6em;
+    border-radius: 999px;
+    line-height: 0.75em;
+    color: white;
+    color: $shopping-cart-red;
+    text-align: center;
+    width: 10px;
+    font-weight: bold;
+    background: white;
+    border-style: solid;
+}
+
+.fa-circle {
+    color: red;
+}
+
+.red-cart {
+    color: royalblue;
+    background: white;
+}
+
+/* vendor index*/
+.custom-border {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+    .custom-border:focus {
+        border-color: black;
+        box-shadow: none;
+    }
+
+.text-danger {
+    color: red;
+}
+
+.form-group.required .form-control {
+    border: 1px solid #dc3545;
+}
+
+input {
+    border-radius: 10px;
+}
+
+/*layout*/
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+}
+
+.cart {
+    position: relative;
+}
+
+/*.cart-count {
+    position: absolute;
+    top: -20px;
+    right: -50px;
+    background-color: white;
+    border-radius: 48%;
+    padding: 1px 10px;
+    color: black;
+}*/
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+
+ .bold-text {
+    font-weight: bold;
+    font-size: 0.9rem; /* Adjust size as needed */
+}
+
+
+/*
+     card icon img
+*/
+
+.action-icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.start-icon {
+    margin-right: auto;
+}
+
+.end-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 25%;
+    /* Adjust spacing between icons if needed */
+}
+
+.action-icons img:hover{
+    transform:scale(1.2);
+    transition:ease-in;
+    cursor:pointer;
+}
+
+
+.custom-border {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+    .custom-border:focus {
+        border-color: black;
+        box-shadow: none; /* Optional: remove default focus shadow */
+    }
+
+.text-danger {
+    color: red;
+}
+
+.form-group.required .form-control {
+    border: 1px solid #dc3545; /* Red border for invalid fields */
+}
+
+input {
+    border-radius: 10px;
+}

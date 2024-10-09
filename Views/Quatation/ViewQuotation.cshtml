@@ -1,0 +1,711 @@
+﻿@model QuatationDetaileViewModel
+<section>
+    <div class="text-center">
+        <button class="btn btn-info my-4 mb-2 ms-4" id="exportToPPT">Export to PPT</button>
+        <button class="btn btn-info my-4 mb-2 ms-4" id="exportToPDF">Export to PDF</button>
+        <button class="btn btn-info my-4 mb-2 ms-4" id="exportToExcel">Export to Excel</button> <!-- New button -->
+    </div>
+
+    <div id="exportContent" class="card p-4 m-2">
+        <div class="container-fluid my-2">
+            <div class="mb-3">
+                <div class="row">
+
+                    <div class="col-lg-6 text-center">
+                        <img id="myImage" class="ml-3 mr-3 mb-3" alt="Location Image" style="width:100%; max-width: 300px" />
+                        <span id="imagedata" style="display:none"></span>
+                        <img id="myImagetwo" class="m-3" alt="Location Image" style="display:none" />
+                        <span id="imagedatatwo" style="display:none"></span>
+                    </div>
+
+
+                    <div class="col-lg-6 text-lg-right pr-4">
+                        <div class="text-end">
+                            <h1 class="display-4 text-end">SAHU ADVERTISING</h1>
+                            <p class="lead">Office No. 307, Supreme Classic Building,<br /> Salunke Vihar Road, Pune 411048</p>
+                            <p>Email: <a href="mailto:marketing@sahuads.com">marketing@sahuads.com</a><br /> GSTIN: 27ABJCS1061L1Z3</p>
+                        </div>
+                    </div>
+                </div>
+                @if (Model != null)
+                {
+                    var totalprice = 0.0;
+                    <h4 class="text-center my-4">Quotation</h4>
+                    <div class="row">
+                        <div class="col-md-9 text-start mb-3 mb-md-0">
+                            <input type="hidden" class="hidden" quotationId="@Model.Id" value="@Model.Id" />
+                            <p class="ml-2"><strong>Quotation Number :</strong> @Model.QuotationNumber</p>
+                            <input type="hidden" qnumber="@Model.QuotationNumber" name="name" value="@Model.QuotationNumber" />
+                            <p class="ml-2"><strong>Date :</strong> @Model.CreatedAt?.ToString("yyyy-MM-dd")</p>
+                        </div>
+                        <div class="col-md-3 totalamountclass" style="text-align:start">
+                            <p ><strong>Quotation For :</strong> @Model.BusinessName</p>
+                            @{
+                                string truncatedAddress = @Model.Address.Length > 30 ? @Model.Address.Substring(0, 30) + "..." : @Model.Address;
+                            }
+                            <p><strong>Address :</strong> @truncatedAddress</p>                           
+                            @foreach (var item in Model.Items)
+                            { totalprice += Convert.ToDouble(item.Rate); }
+                            <p ><strong>Total Amount  : </strong> @totalprice /-</p>
+                        </div>
+                    </div>
+                    <hr>
+                    @foreach (var item in Model.Items)
+                    {
+                                <div class="card mycard mt-4">
+                                    <div class="media my-2 flex-column flex-md-row align-items-center">
+                                        <img src="data:image/png;base64,@item.Image" class="img-size m-3" style="max-width:150px; max-height:150px;" alt="Location Image">
+
+                                        <div class="media-body mt-4 text-center text-md-left">
+                                            <h5 class="mt-0">@item.Location</h5>
+                                            <p><strong>City:</strong> @item.City</p>
+                                            <p><strong>Size:</strong> @item.Width FT x @item.Height FT</p>
+                                            <p><strong>Vendor   :</strong> @Model.VendorName</p>
+                                            <h5 class="text-primary">Price: @item.Rate/-</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                    }
+                }
+
+                else
+
+                {
+                        <p>No data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $("#exportToPDF").on("click", function () {
+                const { jsPDF } = window.jspdf;
+                let doc = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'in',
+                    format: 'A4',
+                });
+
+                // Define the font styles
+                const titleFont = { fontSize: 18, fontStyle: 'bold' };
+                const textFont = { fontSize: 12 };
+
+                // First page (Welcome slide equivalent)
+                let pageWidth = doc.internal.pageSize.getWidth();
+                let pageHeight = doc.internal.pageSize.getHeight();
+                // Add the first image (background)
+                let imgData = document.getElementById('imagedatatwo').innerHTML;
+                console.log("Background Image Data:", imgData);
+                doc.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight); // Adjust as needed
+                // Add the logo image (second image) on top of the first image
+                let logoImgData = document.getElementById('imagedata').innerHTML;
+
+                // Adjust these coordinates to position the logo
+                let logoX = 8.5; // X position
+                let logoY = 0.3; // Y position
+                let logoWidth = 3; // Width of the logo
+                let logoHeight =1; // Height of the logo
+
+               // Add the logo image
+                doc.addImage(logoImgData, 'PNG', logoX, logoY, logoWidth, logoHeight);
+                doc.setFontSize(15);
+                doc.setFont("helvetica", "bold");
+
+
+                doc.addPage();
+                doc.setFillColor(255, 238, 240); // Light red background
+                doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+                doc.addImage(logoImgData, 'PNG', 1.7, 2.1, 2, 1);
+
+                doc.setFontSize(16);
+                doc.setTextColor(255, 0, 0); // Red
+                doc.text('SAHU OUTDOOR ADVERTISING', pageWidth / 1.2, 2.2, { align: 'right' });
+                doc.setTextColor(128, 128, 128); // Gray
+                doc.setFontSize(12);
+                doc.text('Office No. 307, Supreme Classic Building,', pageWidth / 1.2, 2.5, { align: 'right' });
+                doc.text('Salunke Vihar Road, Pune 411048', pageWidth / 1.2, 2.7, { align: 'right' });
+                doc.text('Email: marketing@sahuads.com GSTIN: 27ABJCS1061L1Z3', pageWidth / 1.2, 2.9, { align: 'right' });
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(16);
+                doc.setFont("helvetica", "bold");
+                doc.text('Quotation ', pageWidth / 2, 4.0, { align: 'center' });
+
+                // Add quotation details
+                let quotationId = $('#exportContent').find("input[quotationId]").val();
+                let qnum = $('#exportContent').find("input[qnumber]").val();
+                let date = $('.col-md-9 p').eq(0).text();
+                let dateone = $('.col-md-9 p').eq(1).text();
+
+                let customer = $('.totalamountclass p').eq(0).text();
+                let address = $('.totalamountclass p').eq(1).text();
+                let totalPrice = $('.totalamountclass p').eq(2).text();
+                // Set up padding and background dimensions
+                const backgroundX = 1; // X position of the background
+                const backgroundY = 4.9; // Y position of the background
+                const backgroundWidth = 10; // Width of the background
+                const backgroundHeight = 2; // Height of the background
+                const cornerRadius = 0.2;
+
+                
+                // Set the background color
+                doc.setFillColor(255, 255, 255); // White background for the text area
+                //  doc.rect(backgroundX, backgroundY, backgroundWidth, backgroundHeight, cornerRadius, 'F'); // Fill the rectangle
+                doc.roundedRect(backgroundX, backgroundY, backgroundWidth, backgroundHeight, cornerRadius, cornerRadius, 'F'); // Fill the rounded rectangle
+
+                // Add text with padding
+                doc.setFontSize(14);
+                doc.text(`${date}`, 2, 5.6);
+                doc.text(`${dateone}`, 2, 5.9);
+                doc.text(`${customer}`, 6, 5.6);
+                doc.text(`${address}`, 6, 5.9);
+                doc.text(`${totalPrice}`, 6, 6.2);
+
+
+
+                // Loop through items and add them to the PDF
+                let totalQuote = 0;
+                let countforslide = 0;
+                let totalitemofthequation = 0;
+
+                $('.card.mt-4').each(function (index, element) {
+                    totalitemofthequation += 1;
+                });
+
+                $('.card.mt-4').each(function (index, element) {
+                    if (countforslide % 1 === 0) {
+                        doc.addPage();
+                        doc.setFillColor(255, 238, 240);
+                        doc.rect(0, 0, pageWidth, pageHeight, 'F');
+                    }
+
+                    let itemLocation = $(this).find('.media-body h5').eq(0).text();
+                    let itemCity = $(this).find('p').eq(0).text().replace('City:', '').trim();
+                    let itemSize = $(this).find('p').eq(1).text().replace('Size:', '').trim();
+                    let itemVendor = $(this).find('p').eq(2).text().replace('Vendor Name:', '').trim();
+                    let itemRate = $(this).find('.text-primary').text().replace('Price:', '').trim();
+                    let itemImage = $(this).find('img').attr('src').split(',')[ 1 ];
+
+                    totalQuote += parseFloat(itemRate.replace(/,/g, '')) || 0;
+
+                    let yPosition = (countforslide % 1 === 0) ? 0.5 : 3;
+                    const backgroundX = 0; // X position of the background
+                    const backgroundY = (countforslide % 1 === 0) ? 6 : 6; 
+                    const backgroundWidth = pageWidth; 
+                    const backgroundHeight = 2.4; 
+                    const cornerRadius = 0.2;
+                    // Set the background color
+                    doc.setFillColor(255, 255, 255);
+                    doc.roundedRect(backgroundX, backgroundY, backgroundWidth, backgroundHeight, cornerRadius, cornerRadius, 'F'); // Fill the rounded rectangle
+
+                    var imageWidth = pageWidth * 1.0; 
+                    var imageHeight = pageHeight * 0.8; 
+                    // Add the image
+                    doc.addImage(itemImage, 'PNG', 0, 0, imageWidth, 6.9);
+                    //doc.text(`Location: ${itemLocation}`, 4, backgroundY + 0.5);
+
+                    const maxLineLength = 80;
+                    let lines = [];
+
+                    while (itemLocation.length > maxLineLength) {
+                        let line = itemLocation.slice(0, maxLineLength);
+                        let lastSpace = line.lastIndexOf(' ');
+                        if (lastSpace > -1) {
+                            line = line.slice(0, lastSpace); // Ensure no word is cut off
+                        }
+                        lines.push(line);
+                        itemLocation = itemLocation.slice(line.length).trim(); 
+                    }
+                    lines.push(itemLocation); 
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(0, 0, 0);
+                    // Add the first line with "Location:"
+                    doc.text(`Location: ${lines[0]}`, 1.7, backgroundY + 1.3);
+
+                    // Add the remaining lines without "Location:" and reduce the line gap
+                    lines.slice(1).forEach((line, index) => {
+                        doc.text(line, 1.7, backgroundY + 0.2 + ((index + 1) * 1.3)); // Adjust y position with reduced line gap
+                    });
+
+                    doc.setFontSize(12);
+                    doc.setTextColor(50);
+                    doc.text(`City         : ${itemCity}`, 1.7, backgroundY + 1.8);
+                    doc.text(`Size         : ${itemSize}`, 7, backgroundY + 1.8);
+                    doc.text(`${itemVendor}`, 1.7, backgroundY + 2.1);
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(`Price     : ${itemRate}`, 7, backgroundY + 2.1);
+
+                    countforslide += 1;
+                });
+                doc.addPage();
+                doc.setFillColor(255, 238, 240);
+                doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+                doc.setFontSize(28);
+                doc.setTextColor(0, 0, 0);
+
+                const thankYouText = 'Thank You';
+                const textWidth = doc.getTextWidth(thankYouText);
+                const textX = (pageWidth - textWidth) / 2;
+                const textY = 1;
+
+                doc.text(thankYouText, textX, textY);
+
+                 doc.setDrawColor(255, 0, 0);
+                 doc.setLineWidth(0.1); 
+                 const underlineY = textY + 0.3; 
+                 doc.line(textX, underlineY, textX + textWidth + 0.2, underlineY);
+
+
+
+                doc.addImage(logoImgData, 'PNG', 4.5, 3, 2.9, 1);
+
+
+                let startY = 3.6;
+                // doc.text('SAHU OUTDOOR ADVERTISING', pageWidth / 2, startY, { align: 'center' });
+
+                //doc.setTextColor(128, 128, 128);
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(14);
+                //doc.setFont("bold");
+
+                startY += 2.2;
+                doc.text('Office No. 307, Supreme Classic Building,', pageWidth / 2, startY, { align: 'center' });
+
+                startY += 0.2;
+                doc.text('Salunke Vihar Road, Pune 411048', pageWidth / 2, startY, { align: 'center' });
+
+                startY += 0.2;
+                doc.text('Email: marketing@sahuads.com GSTIN: 27ABJCS1061L1Z3', pageWidth / 2, startY, { align: 'center' });
+
+                doc.setTextColor(255, 0, 0);
+                doc.setFontSize(16);
+                doc.setFont("helvetica", "bold");
+                doc.text('SAHU OUTDOOR ADVERTISING', pageWidth / 2, 4.7, { align: 'center' });
+
+
+                // Save the PDF
+                doc.save(`Sahu_Advertising_quotation_${qnum}.pdf`);
+
+            });
+
+
+
+            function getBase64ImageFromUrl(url, callback) {
+                fetch(url)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        var reader = new FileReader();
+                        reader.onloadend = function () {
+                            var base64String = reader.result.replace("data:", "").replace(/^.+,/, '');
+                            callback(base64String);
+                        };
+                        reader.readAsDataURL(blob);
+                    })
+                    .catch(error => console.error('Error converting image:', error));
+            }
+
+            var imageUrl = window.location.origin + "/images/logo.png";
+            getBase64ImageFromUrl(imageUrl, function (base64String) {
+                console.log('Base64 String:', base64String);
+                document.getElementById('myImage').src = "data:image/png;base64," + base64String + "";
+                document.getElementById('imagedata').innerHTML = "data:image/png;base64," + base64String + "";
+
+            });
+
+            var imageUrl = window.location.origin + "/images/HoardingImg.png";
+            getBase64ImageFromUrl(imageUrl, function (base64String) {
+                console.log('Base64 String:', base64String);
+                document.getElementById('myImagetwo').src = "data:image/png;base64," + base64String + "";
+                document.getElementById('imagedatatwo').innerHTML = "data:image/png;base64," + base64String + "";
+
+            });
+
+
+       
+            $("#exportToPPT").on("click", function () {
+                let pptx = new PptxGenJS();
+
+                // Define the design template
+                const titleFont = { fontSize: 32, bold: true, color: '0088CC' };
+                const textFont = { fontSize: 18 };
+
+                // Add the welcome slide
+                let firstSlide = pptx.addSlide();
+                firstSlide.addImage({ path: document.getElementById('imagedatatwo').innerHTML, x: 0, y: 0, w: '100%', h: '100%' });
+                firstSlide.addImage({ path: document.getElementById('imagedata').innerHTML, x: 8.2, y: 0.3, w: 1.5, h: 0.5 });
+                const headerTextFont = { fontSize: 23, bold: true, color: '000000' };
+                // firstSlide.addText('Hoarding Document', { x: 5.9, y: 4.7, w: '40%', h: 1, ...headerTextFont, align: 'right' });
+
+                let secondSlide = pptx.addSlide();
+                secondSlide.addShape(pptx.ShapeType.rect, {
+                    x: 0,
+                    y: 0,
+                    w: '100%',
+                    h: '100%',
+                    fill: { color: 'FFEEF0' }
+
+                });
+                secondSlide.addImage({ path: document.getElementById('imagedata').innerHTML, x: 1.7, y: 1.1, w: 2, h: 1 });
+
+                const headingFont = { fontSize: 14, bold: true, color: 'FF0000' }; // Red color and font size 13
+                const textFontone = { fontSize: 12, color: '000000' };
+                const textHeadingFont = { fontSize: 16, bold: true, color: '000000' };
+                const tabletext = { fontSize: 14, color: '000000' };
+
+                secondSlide.addText('SAHU OUTDOOR ADVERTISING', { x: 1, y: 1.2, ...headingFont, align: 'right' });
+                secondSlide.addText('Office No. 307, Supreme Classic Building,', { x: 1, y: 1.5, ...textFontone, align: 'right' });
+                secondSlide.addText('Salunke Vihar Road, Pune 411048', { x: 1, y: 1.7, ...textFontone, align: 'right' });
+                secondSlide.addText('Email: marketing@sahuads.com GSTIN: 27ABJCS1061L1Z3', { x: 1, y: 1.9, ...textFontone, align: 'right' });
+
+                secondSlide.addText('Quotation ', { x: 1, y: 2.6, ...textHeadingFont, align: 'center' });
+
+                secondSlide.addShape(pptx.ShapeType.rect, {
+                    x: 1,
+                    y: 3,
+                    w: 8,
+                    h: 1.5,
+                    fill: { color: 'FFFFFF' },
+                    line: { color: 'FFFFFF', width: 15 }
+                });
+
+                let quotationId = $('#exportContent').find("input[quotationId]").val();
+                let qnum = $('#exportContent').find("input[qnumber]").val();
+                let date = $('.col-md-9 p').eq(0).text();
+                let dateone = $('.col-md-9 p').eq(1).text();
+
+                let customer = $('.totalamountclass p').eq(0).text();
+                let address = $('.totalamountclass p').eq(1).text();
+                let totalPrice = $('.totalamountclass p').eq(2).text();
+
+                secondSlide.addText(`${date}`, { x: 1.3, y: 3.5, ...tabletext, align: 'left' });
+                secondSlide.addText(`${dateone}`, { x: 1.3, y: 3.8, ...tabletext, align: 'left' });
+                secondSlide.addText(`${customer}`, { x: 4.5, y: 3.5, ...tabletext, align: 'left' });
+                secondSlide.addText(`${address}`, { x: 4.5, y: 3.7, ...tabletext, align: 'left' });
+                secondSlide.addText(`${totalPrice}`, { x: 4.5, y: 3.9, ...tabletext, align: 'left' });
+
+                let totalQuote = 0;
+
+                // Function to convert base64 to Blob URL
+                function base64ToBlobUrl(base64, contentType) {
+                    let sliceSize = 1024;
+                    let byteCharacters = atob(base64);
+                    let bytesLength = byteCharacters.length;
+                    let sliceCount = Math.ceil(bytesLength / sliceSize);
+                    let byteArrays = new Array(sliceCount);
+                    for (let sliceIndex = 0; sliceIndex < sliceCount; sliceIndex++) {
+                        let begin = sliceIndex * sliceSize;
+                        let end = Math.min(begin + sliceSize, bytesLength);
+                        let bytes = new Array(end - begin);
+                        for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
+                            bytes[ i ] = byteCharacters[ offset ].charCodeAt(0);
+                        }
+                        byteArrays[ sliceIndex ] = new Uint8Array(bytes);
+                    }
+                    let blob = new Blob(byteArrays, { type: contentType });
+                    return URL.createObjectURL(blob);
+                }
+
+                const itemslideloca = { fontSize: 13, bold: true, color: '000000' };
+                const itemslidePrice = { fontSize: 14, bold: true, color: '000000' };
+                const itemslideData = { fontSize: 12, color: '000000' };
+
+
+                let itemSlide;
+                let countforslide = 0;
+                let totalitemofthequation = 0;
+
+                $('.card.mt-4').each(function (index, element) {
+                    totalitemofthequation += 1;
+                });
+
+                $('.card.mt-4').each(function (index, element) {
+                    if (countforslide % 1 === 0) {
+
+                        itemSlide = pptx.addSlide();
+
+
+                        itemSlide.addShape(pptx.ShapeType.rect, {
+                            x: 0,
+                            y: 0,
+                            w: '100%',
+                            h: '100%',
+                            fill: { color: 'FFEEF0' }
+                        });
+                    }
+
+                    // Retrieve item details
+                    let itemLocation = $(this).find('.media-body h5').eq(0).text();
+                    let itemCity = $(this).find('p').eq(0).text().replace('City:', '').trim();
+                    let itemSize = $(this).find('p').eq(1).text().replace('Size:', '').trim();
+                    let itemVendor = $(this).find('p').eq(2).text().replace('Vendor Name:', '').trim();
+                    let itemRate = $(this).find('.text-primary').text().replace('Price:', '').trim();
+                    let itemImage = $(this).find('img').attr('src').split(',')[ 1 ];
+
+                    totalQuote += parseFloat(itemRate.replace(/,/g, '')) || 0;
+
+                    let yPosition = (countforslide % 1 === 0) ? 0.5 : 3;
+
+                    // Add item details to the slide
+                    itemSlide.addShape(pptx.ShapeType.rect, {
+                        x: 0.1,
+                        y: 4.7,
+                        w: 9.8,
+                        h: 0.8,
+                        fill: { color: 'FFFFFF' },
+                        line: { color: 'FFFFFF', width: 15 }
+                    });
+                    //itemSlide.addImage({ path: base64ToBlobUrl(itemImage, 'image/png'), x: 1.1, y: yPosition + 0.1, w: 2.3, h: 1.6 });
+                    itemSlide.addImage({ path: base64ToBlobUrl(itemImage, 'image/png'), x: 0, y: 0, w: '100%', h: 4.6 });
+
+                    const maxLineLength = 150;
+                    let lines = [];
+                    while (itemLocation.length > maxLineLength) {
+                        let line = itemLocation.slice(0, maxLineLength);
+                        let lastSpace = line.lastIndexOf(' ');
+                        if (lastSpace > -1) {
+                            line = line.slice(0, lastSpace);
+                        }
+                        lines.push(line);
+                        itemLocation = itemLocation.slice(line.length).trim();
+                    }
+                    lines.push(itemLocation); 
+
+                    itemSlide.addText(`Location: ${lines[0]}`, { x: 1.3, y: yPosition + 4.4, ...itemslideloca });
+
+                    lines.slice(1).forEach((line, index) => {
+                        itemSlide.addText(line, { x: 1.3, y: yPosition + 4.7 + (index * 0.3), ...itemslideloca });
+                    });
+
+                    //itemSlide.addText(`Location: ${itemLocation}`, { x: 3.5, y: yPosition + 0.1, ...itemslideloca });
+                    itemSlide.addText(`City         : ${itemCity}`, { x: 1.3, y: yPosition + 4.7, ...itemslideData });
+                    itemSlide.addText(`Size         : ${itemSize}`, { x: 5.5, y: yPosition + 4.7, ...itemslideData });
+                    itemSlide.addText(`${itemVendor}`, { x: 1.3, y: yPosition + 4.9, ...itemslideData });
+                    itemSlide.addText(`Price     : ${itemRate}`, { x: 5.5, y: yPosition + 4.9, ...itemslidePrice });
+
+                    // Increment the counter
+                    countforslide += 1;
+                });
+
+                // After processing all item slides
+                const titleT = { fontSize: 25, bold: true, color: '000000', fontFace: 'Arial' };
+
+                // Add the Thank You slide
+                let thankYouSlide = pptx.addSlide();
+
+                thankYouSlide.addShape(pptx.ShapeType.rect, {
+                    x: 0,
+                    y: 0,
+                    w: '100%',
+                    h: '100%',
+                    fill: { color: 'FFEEF0' }
+
+                });
+
+                // Add the "Thank you" text
+                thankYouSlide.addText('Thank you', {
+                    x: 1,
+                    y: 0.6,
+                    ...titleT,
+                    align: 'center'
+                });
+
+                // Add a red line under the "Thank you" text
+                 thankYouSlide.addShape(pptx.ShapeType.line, {
+                     x: 3.5,
+                     y: 1, 
+                     w: 2.5,
+                     h: 0,
+                     line: { color: 'FF0000', width: 4, align: 'center' } // Set color to red
+                 });
+
+                const textforaddress = { fontSize: 14, bold: true, color: '000000' };
+
+                thankYouSlide.addImage({ path: document.getElementById('imagedata').innerHTML, x: 3.8, y: 2.3, w: 2, h: 1 });
+
+                thankYouSlide.addText('SAHU OUTDOOR ADVERTISING', { x: 1, y: 3.7, ...headingFont, align: 'center' });
+                thankYouSlide.addText('Office No. 307, Supreme Classic Building,', { x: 1, y: 4.4, ...textforaddress, align: 'center' });
+                thankYouSlide.addText('Salunke Vihar Road, Pune 411048', { x: 1, y: 4.6, ...textforaddress, align: 'center' });
+                thankYouSlide.addText('Email: marketing@sahuads.com  GSTIN: 27ABJCS1061L1Z3', { x: 1, y: 4.8, ...textforaddress, align: 'center' });
+                //thankYouSlide.addText('Email: marketing@sahuads.com', { x: 1, y: 4.6, ...textFontone, align: 'center' });
+
+                let quatationnumber = $('#exportContent').find("input[qnumber]").val();
+
+                // Save the presentation
+                pptx.writeFile(`Sahu_Advertising_quotation_${quatationnumber}.pptx`).then(function (fileName) {
+                    console.log('Presentation saved as:', fileName);
+                }).catch(function (err) {
+                    console.error('Error saving presentation:', err);
+                });
+            });
+        });
+
+
+
+        //Start Excel file code Quatation/GenerateExcel
+
+        document.getElementById('exportToExcel').addEventListener('click', function () {
+            var quotationNumber = document.querySelector('input[qnumber]').value;
+
+            // Find the element containing the Date by searching through <p> elements
+            var dateElement = Array.from(document.querySelectorAll('.ml-2 strong'))
+                .find(p => p.parentElement.innerText.includes("Date"));
+            var quotationDate = dateElement ? dateElement.parentElement.innerText.split(":")[1].trim() : '';
+
+            // Find Business Name, Address, and Total Amount in totalamountclass
+            var businessNameElement = Array.from(document.querySelectorAll('.totalamountclass p'))
+                .find(p => p.innerText.includes("Quotation For"));
+            var addressElement = Array.from(document.querySelectorAll('.totalamountclass p'))
+                .find(p => p.innerText.includes("Address"));
+            var totalAmountElement = Array.from(document.querySelectorAll('.totalamountclass p'))
+                .find(p => p.innerText.includes("Total Amount"));
+
+            var businessName = businessNameElement ? businessNameElement.innerText.split(":")[1].trim() : '';
+            var address = addressElement ? addressElement.innerText.split(":")[1].trim() : '';
+            var totalAmount = totalAmountElement ? totalAmountElement.innerText.split(":")[1].trim() : '';
+
+            // Collecting data from items (assuming multiple items)
+            var items = [];
+            document.querySelectorAll('.mycard').forEach(function (card) {
+                var location = card.querySelector('h5').innerText;
+                var cityElement = Array.from(card.querySelectorAll('p'))
+                    .find(p => p.innerText.includes("City"));
+                var sizeElement = Array.from(card.querySelectorAll('p'))
+                    .find(p => p.innerText.includes("Size"));
+                var priceElement = card.querySelector('h5.text-primary');
+
+                var city = cityElement ? cityElement.innerText.split(":")[1].trim() : '';
+                var size = sizeElement ? sizeElement.innerText.split(":")[1].trim() : '';
+                var price = priceElement ? priceElement.innerText.split(":")[1].trim() : '';
+
+                items.push({
+                    Location: location,
+                    City: city,
+                    Size: size,
+                    Price: price
+                });
+            });
+
+            // Send all data to the server
+            var data = {
+                QuotationNumber: quotationNumber,
+                QuotationDate: quotationDate,
+                BusinessName: businessName,
+                Address: address,
+                TotalAmount: totalAmount,
+                Items: items
+            };
+
+            fetch('/Quatation/GenerateExcel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([ blob ]));
+                    const link = document.createElement('a');
+                    let quatationnumber = $('#exportContent').find("input[qnumber]").val();
+
+                    link.href = url;
+                    link.setAttribute('download', `Sahu_Advertising_quotation_${quatationnumber}.xlsx`);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.parentNode.removeChild(link);
+                })
+                .catch((error) => {
+                    console.error('Error generating Excel file:', error);
+                });
+        });
+
+
+
+
+        //document.getElementById('exportToExcel').addEventListener('click', function () {
+        //    var quotationNumber = document.querySelector('input[qnumber]').value;
+
+        //    // Fix: Manually find elements containing the specific text
+        //    var businessNameElement = Array.from(document.querySelectorAll('.totalamountclass p'))
+        //        .find(p => p.innerText.includes("Quotation For"));
+        //    var totalAmountElement = Array.from(document.querySelectorAll('.totalamountclass p'))
+        //        .find(p => p.innerText.includes("Total Amount"));
+
+        //    // Extract values if elements are found
+        //    var businessName = businessNameElement ? businessNameElement.innerText.split(":")[1].trim() : '';
+        //    var totalAmount = totalAmountElement ? totalAmountElement.innerText.split(":")[1].trim() : '';
+
+        //    var items = [];
+        //    document.querySelectorAll('.card').forEach(function (card) {
+        //        var location = card.querySelector('h5').innerText;
+        //        var cityElement = Array.from(card.querySelectorAll('p'))
+        //            .find(p => p.innerText.includes("City"));
+        //        var sizeElement = Array.from(card.querySelectorAll('p'))
+        //            .find(p => p.innerText.includes("Size"));
+        //        var priceElement = card.querySelector('h5.text-primary');
+
+        //        // Get values from these elements
+        //        var city = cityElement ? cityElement.innerText.split(":")[1].trim() : '';
+        //        var size = sizeElement ? sizeElement.innerText.split(":")[1].trim() : '';
+        //        var price = priceElement ? priceElement.innerText.split(":")[1].trim() : '';
+
+        //        items.push({
+        //            Location: location,
+        //            City: city,
+        //            Size: size,
+        //            Price: price
+        //        });
+        //    });
+
+        //    var data = {
+        //        QuotationNumber: quotationNumber,
+        //        BusinessName: businessName,
+        //        TotalAmount: totalAmount,
+        //        Items: items
+        //    };
+
+        //    fetch('/Quatation/GenerateExcel', {
+        //        method: 'POST',
+        //        headers: {
+        //            'Content-Type': 'application/json',
+        //        },
+        //        body: JSON.stringify(data),
+        //    })
+        //        .then(response => {
+        //            if (response.ok) {
+        //                return response.blob();
+        //            } else {
+        //                throw new Error('Error generating Excel file');
+        //            }
+        //        })
+        //        .then(blob => {
+        //            const url = window.URL.createObjectURL(new Blob([blob]));
+        //            const link = document.createElement('a');
+        //            link.href = url;
+        //            link.setAttribute('download', 'Quotation.xlsx');
+        //            document.body.appendChild(link);
+        //            link.click();
+        //            link.parentNode.removeChild(link);
+        //        })
+        //        .catch((error) => {
+        //            console.error('Error generating Excel file:', error);
+        //        });
+        //});
+
+
+
+    </script>
+
+</section>

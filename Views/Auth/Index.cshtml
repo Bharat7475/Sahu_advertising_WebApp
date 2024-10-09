@@ -1,0 +1,73 @@
+﻿@model LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+    <!-- MDB CSS (if needed) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" rel="stylesheet">
+</head>
+<body>
+    <section id="bg-sec" class="vh-100" style="background-image: url('@Url.Content("~/images/loginbackground.png")'); background-size: cover; background-position: center;">
+        <div class="container h-100">
+            <div class="row h-100">
+                <!-- First 6 columns with image -->
+                <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+                    <img src="~/images/HoardingImg.png" alt="Description of Image" class="img-fluid" style="max-width: 150%";/>
+                </div>
+
+                <!-- Second 6 columns with form -->
+                <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+                    <div class="w-75">
+                        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                            <div class="card-body p-5 text-center">
+                                <h2 class="mb-5">Login</h2>
+
+
+                                <form asp-action="Login" method="post">
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" placeholder="Username" name="Username" required class="form-control border form-control-lg" />
+                                        <label class="form-label" for="typeEmailX-2">Username</label>
+                                    </div>
+
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="password" placeholder="Password" name="Password" required class="form-control form-control-lg" />
+                                        <label class="form-label" for="typePasswordX-2">Password</label>
+                                    </div>
+
+                                    @*  <!-- Checkbox -->
+                                    <div class="form-check d-flex justify-content-start mb-4">
+                                    <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
+                                    <label class="form-check-label" for="form1Example3"> Remember password </label>
+                                    </div *@
+
+                                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS and dependencies (Popper.js and jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- MDB JS (if needed) -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
+</body>
+</html>

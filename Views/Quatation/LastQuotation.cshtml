@@ -1,0 +1,135 @@
+﻿@model Hoarding_managment.Data.QuatationDetaileViewModel
+
+<section>
+    <div class="text-center">
+        <button class="btn btn-primary my-4 mb-2" data-toggle="modal" data-target="#shareModal">Share Quotation</button>
+        <button class="btn btn-info my-4 mb-2 ms-4" data-toggle="modal" data-target="#exportPPTModal">Export to PPT</button>
+        <button class="btn btn-info my-4 mb-2" data-toggle="modal" data-target="#exportExcelModal">Export to Excel</button>
+    </div>
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">Share Quotation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Select how you want to share the quotation:</p>
+                    <a href="#" class="btn btn-primary mb-2">Share via Email</a>
+                    <a href="#" class="btn btn-secondary mb-2">Other Channels</a>
+                    <a href="#" id="shareWhatApp" class="btn btn-success mb-2">Share via WhatApp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export to PPT Modal -->
+    <div class="modal fade" id="exportPPTModal" tabindex="-1" role="dialog" aria-labelledby="exportPPTModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportPPTModalLabel">Export to PowerPoint</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Your quotation will be exported to a PowerPoint file.</p>
+                    <button class="btn btn-info">Export Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export to Excel Modal -->
+    <div class="modal fade" id="exportExcelModal" tabindex="-1" role="dialog" aria-labelledby="exportExcelModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportExcelModalLabel">Export to Excel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Your quotation will be exported to an Excel file.</p>
+                    <button class="btn btn-info">Export Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 m-2">
+        <div class="container-fluid my-2">
+            <div class="mb-3">
+
+                <div class="row">
+                    <div class="col-lg-6 text-center">
+                        <img src="~/images/logo.png" class="m-3" alt="Location Image" style="width:100%; max-width: 300px" />
+                    </div>
+                    <div class="col-lg-6 text-lg-right pr-4">
+                        <div class="text-end">
+                            <h1 class="display-4 text-end">SAHU ADVERTISING</h1>
+                            <p class="lead">Office No. 307, Supreme Classic Building,<br /> Salunke Vihar Road, Pune 411048</p>
+                            <p>Email: <a href="mailto:marketing@sahuads.com">marketing@sahuads.com</a><br /> GSTIN: 27ABJCS1061L1Z3</p>
+                        </div>
+                    </div>
+
+                </div>
+                @if (Model != null)
+                {
+                    var totalprice = 0.0;
+
+                    <h4 class="text-center my-4">Quotation Details</h4>
+
+                    <div class="row">
+                        <div class="col-md-6 text-center mb-3 mb-md-0">
+                            <input type="hidden" class="hidden" quotationId="@Model.Id" value="@Model.Id" />
+                            <p><strong>Quotation Id:</strong> @Model.QuotationNumber</p>
+                            <p><strong>Date:</strong> @Model.CreatedAt?.ToString("yyyy-MM-dd")</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <p><strong>Quotation For:</strong> @Model.CustomerName</p>
+                            <!-- Display Total Quote here after calculating it -->
+                            @foreach (var item in Model.Items)
+                            { totalprice += Convert.ToDouble(@item.Rate); }
+                            <p><strong>Total Quote: </strong>  @totalprice -/</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="card mb-3">
+                            <div class="media my-2 flex-column flex-md-row align-items-center">
+                                <img src="~/images/logo.png" class="m-3" alt="Location Image" style="width: 100%; max-width: 300px;">
+                                <div class="media-body mt-4 text-center text-md-left">
+
+                                    <h5 class="mt-0">@item.Location</h5>
+                                    <p><strong>City:</strong> @item.City</p>
+                                    <p><strong>Size:</strong> @item.Width x @item.Height</p>
+                                    <p><strong>Vendor:</strong> @item.</p>
+                                    <h5 class="text-primary">Price: @item.Rate/-</h5>
+                                </div>
+                            </div>
+                        </div>
+                        totalprice += Convert.ToDouble(@item.Rate);
+                    }
+
+
+                }
+
+                else
+                {
+                    <p>No data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+
+</section>

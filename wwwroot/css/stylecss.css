@@ -1,0 +1,253 @@
+﻿﻿body {
+    background-color: #f8f9fa;
+}
+
+
+#importExcelbutton, #addInventory {
+    width:180px;
+    height:44px;
+}
+
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.display-4 {
+    font-weight: bold;
+    color: #ff5733;
+}
+
+.lead {
+    font-size: 1.2em;
+}
+
+hr {
+    border-top: 2px solid #ff5733;
+}
+
+h4 {
+    font-weight: bold;
+}
+
+.media-body h5 {
+    font-weight: bold;
+}
+
+.text-primary {
+    font-weight: bold;
+}
+
+.btn-info {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary {
+    background-color: royalblue;
+    border-color: royalblue;
+}
+
+.custom-border {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+    .custom-border:focus {
+        border-color: black;
+        box-shadow: none;
+    }
+
+.text-danger {
+    color: red;
+}
+
+.form-group.required .form-control {
+    border: 1px solid #dc3545;
+}
+
+input {
+    border-radius: 10px;
+}
+
+/*
+seleced Hoarding
+
+*/
+.hoarding-info p {
+    padding-left:20px;
+}
+
+.hoarding-item {
+    padding-top:15px 0px;
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: 10px
+}
+
+.show-lg {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    align-items: center;
+}
+
+.hoarding-item img {
+    max-width: 150px;
+    height: auto;
+    margin-left: 20px;
+}
+
+.hoarding-info {
+    flex-grow: 1;
+}
+
+.hoarding-actions {
+    text-align: right;
+    width:350px;
+}
+
+.customer-details {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.action-buttons {
+    display: none;
+}
+
+.date-field-container {
+    display: none;
+}
+
+.show-lg .label {
+    display: inline-block;
+    width: 150px;
+    /* Adjust this width as needed */
+    font-weight: bold;
+}
+
+/* my quatation*/
+
+.custom-border {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+    .custom-border:focus {
+        border-color: black;
+        box-shadow: none;
+    }
+
+.text-danger {
+    color: red;
+}
+
+.form-group.required .form-control {
+    border: 1px solid #dc3545;
+}
+
+input {
+    border-radius: 10px;
+}
+
+/*hoarding -css */
+.img-container {
+    display: flex;
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    height: 150px; /* Adjust height as needed */
+    overflow: hidden; /* Ensure image doesn’t overflow container */
+}
+
+#pointer:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.img-fluid {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+}
+
+.action-icons {
+    display: flex;
+    gap: 8px;
+}
+
+    .action-icons i {
+        cursor: pointer;
+    }
+
+p {
+    margin-bottom: 2px;
+}
+
+.ribbon-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.ribbon {
+    position: relative;
+    background: red;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 12px;
+    transform: rotate(-45deg);
+    width: 150px;
+    margin: 10px;
+    top: 10px;
+    left: -50px;
+}
+
+.card-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.card {
+    border-radius: 20px;
+}
+
+    .card img {
+        padding: 5px;
+        border-radius: 20px;
+    }
+
+
+$shopping-cart-red: #df0000;
+
+.fa-stack1[data-count]:after {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    content: attr(data-count);
+    font-size: px;
+    padding: 0.6em;
+    border-radius: 999px;
+    line-height: 0.75em;
+    color: white;
+    color: $shopping-cart-red;
+    text-align: center;
+    width: 10px;
+    font-weight: bold;
+    background: white;
+    border-style: solid;
+}
+
+.fa-circle {
+    color: red;
+}
+
+.red-cart {
+    color: royalblue;
+    background: white;
+}

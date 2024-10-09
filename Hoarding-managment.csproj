@@ -1,0 +1,125 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Hoarding_managment</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\assets\**" />
+    <Compile Remove="wwwroot\images\auth\**" />
+    <Content Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\images\auth\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\images\auth\**" />
+    <None Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\images\auth\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\mycss.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\data\images\css\maps\style.css.map" />
+    <None Include="wwwroot\data\fonts\.DS_Store" />
+    <None Include="wwwroot\data\fonts\Roboto\.DS_Store" />
+    <None Include="wwwroot\data\fonts\Roboto\Roboto-Black.woff2" />
+    <None Include="wwwroot\data\fonts\Roboto\Roboto-Bold.woff2" />
+    <None Include="wwwroot\data\fonts\Roboto\Roboto-Light.woff2" />
+    <None Include="wwwroot\data\fonts\Roboto\Roboto-Medium.woff2" />
+    <None Include="wwwroot\data\fonts\Roboto\Roboto-Regular.woff2" />
+    <None Include="wwwroot\data\images\.DS_Store" />
+    <None Include="wwwroot\data\images\auth\.DS_Store" />
+    <None Include="wwwroot\data\images\faces\.DS_Store" />
+    <None Include="wwwroot\data\images\logo-mini.svg" />
+    <None Include="wwwroot\data\images\logo.svg" />
+    <None Include="wwwroot\data\js\.DS_Store" />
+    <None Include="wwwroot\data\js\chart.js" />
+    <None Include="wwwroot\data\js\Chart.min.js" />
+    <None Include="wwwroot\data\js\dashboard.js" />
+    <None Include="wwwroot\data\js\data-table.js" />
+    <None Include="wwwroot\data\js\dataTables.bootstrap4.js" />
+    <None Include="wwwroot\data\js\documentation.js" />
+    <None Include="wwwroot\data\js\file-upload.js" />
+    <None Include="wwwroot\data\js\hoverable-collapse.js" />
+    <None Include="wwwroot\data\js\jquery.dataTables.js" />
+    <None Include="wwwroot\data\js\off-canvas.js" />
+    <None Include="wwwroot\data\js\tabs.js" />
+    <None Include="wwwroot\data\js\template.js" />
+    <None Include="wwwroot\data\pages\.DS_Store" />
+    <None Include="wwwroot\data\pages\charts\.DS_Store" />
+    <None Include="wwwroot\data\pages\forms\.DS_Store" />
+    <None Include="wwwroot\data\pages\icons\.DS_Store" />
+    <None Include="wwwroot\data\pages\samples\.DS_Store" />
+    <None Include="wwwroot\data\pages\tables\.DS_Store" />
+    <None Include="wwwroot\data\pages\ui-features\.DS_Store" />
+    <None Include="wwwroot\data\scss\.DS_Store" />
+    <None Include="wwwroot\data\scss\components\.DS_Store" />
+    <None Include="wwwroot\data\scss\components\plugin-overrides\_data-tables.scss" />
+    <None Include="wwwroot\data\scss\components\_badges.scss" />
+    <None Include="wwwroot\data\scss\components\_bootstrap-progress.scss" />
+    <None Include="wwwroot\data\scss\components\_buttons.scss" />
+    <None Include="wwwroot\data\scss\components\_cards.scss" />
+    <None Include="wwwroot\data\scss\components\_checkbox-radio.scss" />
+    <None Include="wwwroot\data\scss\components\_dropdown.scss" />
+    <None Include="wwwroot\data\scss\components\_forms.scss" />
+    <None Include="wwwroot\data\scss\components\_icons.scss" />
+    <None Include="wwwroot\data\scss\components\_lists.scss" />
+    <None Include="wwwroot\data\scss\components\_tables.scss" />
+    <None Include="wwwroot\data\scss\landing-screens\_auth.scss" />
+    <None Include="wwwroot\data\scss\mixins\.DS_Store" />
+    <None Include="wwwroot\data\scss\mixins\_animation.scss" />
+    <None Include="wwwroot\data\scss\mixins\_badges.scss" />
+    <None Include="wwwroot\data\scss\mixins\_blockqoute.scss" />
+    <None Include="wwwroot\data\scss\mixins\_buttons.scss" />
+    <None Include="wwwroot\data\scss\mixins\_cards.scss" />
+    <None Include="wwwroot\data\scss\mixins\_misc.scss" />
+    <None Include="wwwroot\data\scss\style.scss" />
+    <None Include="wwwroot\data\scss\_background.scss" />
+    <None Include="wwwroot\data\scss\_demo.scss" />
+    <None Include="wwwroot\data\scss\_fonts.scss" />
+    <None Include="wwwroot\data\scss\_footer.scss" />
+    <None Include="wwwroot\data\scss\_functions.scss" />
+    <None Include="wwwroot\data\scss\_layouts.scss" />
+    <None Include="wwwroot\data\scss\_misc.scss" />
+    <None Include="wwwroot\data\scss\_navbar.scss" />
+    <None Include="wwwroot\data\scss\_reset.scss" />
+    <None Include="wwwroot\data\scss\_sidebar.scss" />
+    <None Include="wwwroot\data\scss\_typography.scss" />
+    <None Include="wwwroot\data\scss\_utilities.scss" />
+    <None Include="wwwroot\data\scss\_variables.scss" />
+    <None Include="wwwroot\data\scss\_vertical-wrapper.scss" />
+    <None Include="wwwroot\data\vendors\.DS_Store" />
+    <None Include="wwwroot\data\vendors\base\vendor.bundle.base.js" />
+    <None Include="wwwroot\data\vendors\chart.js\Chart.min.js" />
+    <None Include="wwwroot\data\vendors\datatables.net-bs4\dataTables.bootstrap4.js" />
+    <None Include="wwwroot\data\vendors\datatables.net\jquery.dataTables.js" />
+    <None Include="wwwroot\data\vendors\mdi\fonts\materialdesignicons-webfont.svg" />
+    <None Include="wwwroot\data\vendors\mdi\fonts\materialdesignicons-webfont.woff2" />
+  </ItemGroup>
+
+  <ItemGroup>
+   
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
+   
+    <PackageReference Include="EPPlus" Version="7.4.0" />
+   
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.0" />
+    <PackageReference Include="Toolbelt.AspNetCore.CssLiveReloader" Version="1.1.4" />
+  </ItemGroup>
+
+</Project>

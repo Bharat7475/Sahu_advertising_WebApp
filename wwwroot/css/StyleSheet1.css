@@ -1,0 +1,38 @@
+﻿
+.fa-stack[data-count]:after {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    content: attr(data-count);
+    font-size: 40%;
+    padding: .6em;
+    border-radius: 999px;
+    line-height: .75em;
+    color: white;
+    color: #DF0000;
+    text-align: center;
+    min-width: 2em;
+    font-weight: bold;
+    background: white;
+    border-style: solid;
+}
+
+.fa-circle {
+    color: #DF0000;
+}
+
+.red-cart {
+    color: #DF0000;
+    background: white;
+}
+.svg-inline--fa.fa-stack-2x {
+    height: 1.4em !important;
+    width: 1.5em !important;
+}
+.fa-stack {
+    display: inline-block;
+    height: 1.9em !important;
+    left: 33px !important;
+    top: 5px !important;
+    width: 2.5em !important;
+}
